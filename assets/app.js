@@ -54,7 +54,7 @@
     $("roles").innerHTML = S.roles[lang].map((r) => `<li>${esc(r)}</li>`).join("");
 
     const demos = S.projects.filter((p) => p.links.some((l) => l.demo)).length + S.lab.filter((l) => l.demo).length;
-    const vals = [R.length, R.reduce((a, r) => a + r.stars, 0), L.tapPRs.length, merged, demos];
+    const vals = [R.length, R.reduce((a, r) => a + r.stars, 0), L.tapPRs.length, merged, demos, S.articlesTotal];
     $("stats").innerHTML = t.stats.map((l, i) => `<div><dt>${esc(l)}</dt><dd>${fmt(vals[i])}</dd></div>`).join("");
 
     // about
@@ -63,8 +63,14 @@
       const showOrig = (lang === "en" && !x.origEn) || (lang === "zh" && x.origEn);
       return `<a class="quote reveal" href="${esc(x.url)}" target="_blank" rel="noopener"><q>${esc(x[lang])}</q>${showOrig ? `<span class="orig">${esc(lang === "en" ? x.zh : x.en)}</span>` : ""}<time>@BruceBlue · ${x.date}</time></a>`;
     }).join("");
-    $("reads").innerHTML = S.reads.map((r) =>
-      `<a class="read reveal" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="k">${r.kind}</span><span><b>${esc(r[lang])}</b><small>${r.date} · ${esc(t.readOnX)}</small></span></a>`).join("");
+    $("chronicle-link").href = S.chronicleSource;
+    $("chronicle").innerHTML = S.chronicle.map((c) => `<li class="reveal"><b>${esc(c.y)}</b><span>${esc(c[lang])}</span></li>`).join("");
+    $("coda").innerHTML = `<q>${esc(S.chronicleCoda[lang])}</q>`;
+    $("all-articles").href = S.x + "/articles";
+    $("reads-note").textContent = t.readsNote.replace("{n}", S.articlesTotal);
+    $("reads").innerHTML = S.readGroups.map((g) =>
+      `<div class="read-group"><h4>${esc(g[lang])}<small>${g.items.length}</small></h4>` +
+      g.items.map((r) => `<a class="read reveal" href="https://x.com/BruceBlue/status/${r.id}" target="_blank" rel="noopener"><time>${r.date.slice(5)}</time><b>${esc(r[lang])}</b></a>`).join("") + `</div>`).join("");
 
     // projects
     const tabs = [["all", t.all], ...Object.entries(S.pillars).map(([k, v]) => [k, v[lang]])];
