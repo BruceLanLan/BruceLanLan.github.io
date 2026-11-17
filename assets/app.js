@@ -109,7 +109,7 @@
       <div class="card-top"><span class="ref">U1.${String(i + 1).padStart(2, "0")} · ${esc(S.pillars[p.pillar][lang])}</span><span class="status ${p.status === "draft" ? "draft" : ""}">${esc(st)}</span></div>
       <h3>${esc(c.t)}</h3><p>${esc(c.d)}</p>
       ${metrics ? `<div class="metrics">${metrics}</div>` : `<div style="margin-top:auto"></div>`}
-      <div class="links">${links}${repo ? `<span class="src">${esc(t.source)} · ${repo.pushed}</span>` : ""}</div></article>`;
+      <div class="links">${links}${repo ? `<a class="src" href="${esc(repo.url)}#readme" target="_blank" rel="noopener">${esc(t.source)} · ${repo.pushed}</a>` : ""}</div></article>`;
   }
 
   /* ---------- NAND toy ---------- */

@@ -79,6 +79,8 @@ h1 { margin: 0 0 22px; font-family: var(--sans); font-weight: 900; letter-spacin
 html[lang="en"] h1 { font-family: var(--display); font-weight: 700; letter-spacing: -.03em; }
 .h1a { display: block; font-size: clamp(30px, 8.6vw, 70px); }
 @media (min-width: 760px) { .h1a { font-size: clamp(44px, 6.4vw, 70px); } }
+@media (min-width: 980px) { .h1a { font-size: clamp(40px, 4.3vw, 60px); } }
+.h1a, .h1b { text-wrap: balance; }
 .h1b { display: block; margin-top: 10px; font-size: clamp(20px, 2.8vw, 30px); font-weight: 500; color: var(--muted); letter-spacing: 0; }
 .h1b em { font-style: normal; color: var(--signal); }
 .hl { background: linear-gradient(transparent 62%, var(--signal-soft) 62%); color: var(--signal); text-shadow: var(--glow); }
@@ -169,7 +171,8 @@ html[lang="en"] h2 { font-family: var(--display); font-weight: 700; }
 .links a { text-decoration: none; padding: 5px 11px; border-radius: 7px; border: 1px solid var(--line); transition: border-color .15s; }
 .links a.demo { background: var(--pc); color: var(--bg); border-color: transparent; font-weight: 700; }
 .links a:hover { border-color: var(--pc); }
-.src { margin-left: auto; font: 10.5px var(--mono); color: var(--subtle); }
+.links a.src { margin-left: auto; padding: 0; border: 0; font: 10.5px var(--mono); color: var(--subtle); text-decoration: underline dotted; text-underline-offset: 3px; }
+.links a.src:hover { color: var(--pc); }
 
 /* ---------- TAP map ---------- */
 .taps-summary { display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: baseline; margin-bottom: 18px; font-size: 13.5px; color: var(--muted); }
