@@ -24,6 +24,7 @@
     store.set("theme", root.dataset.theme);
     readColors();
   };
+  matchMedia("(prefers-color-scheme: light)").addEventListener?.("change", () => readColors());
 
   /* ---------- static links ---------- */
   $("x-link").href = $("x-more").href = S.x;
@@ -39,28 +40,33 @@
   const edits = L.tapPRs.length - drafts.length;
   const merged = L.tapPRs.filter((p) => p.s === "MERGED").length;
 
-  /* ---------- project filter ---------- */
   let pillar = "all";
 
   function render() {
     const t = T();
     root.lang = lang === "zh" ? "zh-CN" : "en";
-    document.title = lang === "zh" ? "BruceBlue · 公开研究" : "BruceBlue · Research";
+    document.title = lang === "zh" ? "BruceBlue 🌊 公开研究" : "BruceBlue 🌊 Research";
     document.querySelectorAll("[data-i]").forEach((el) => { el.textContent = t[el.dataset.i] ?? ""; });
     document.querySelectorAll("[data-lang]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.lang === lang));
-    // headline highlight
-    const h = document.querySelector(".h1a");
-    const key = lang === "zh" ? "门电路" : "Logic gates";
+    const h = document.querySelector(".h1a"), key = lang === "zh" ? "门电路" : "Logic gates";
     h.innerHTML = esc(t.h1a).replace(key, `<span class="hl">${key}</span>`);
 
     $("roles").innerHTML = S.roles[lang].map((r) => `<li>${esc(r)}</li>`).join("");
 
-    // stats
     const demos = S.projects.filter((p) => p.links.some((l) => l.demo)).length + S.lab.filter((l) => l.demo).length;
     const vals = [R.length, R.reduce((a, r) => a + r.stars, 0), L.tapPRs.length, merged, demos];
-    $("stats").innerHTML = t.stats.map((l, i) => `<div><dt>${esc(l)}</dt><dd data-n="${vals[i]}">${fmt(vals[i])}</dd></div>`).join("");
+    $("stats").innerHTML = t.stats.map((l, i) => `<div><dt>${esc(l)}</dt><dd>${fmt(vals[i])}</dd></div>`).join("");
 
-    // filters + projects
+    // about
+    $("about-body").innerHTML = S.about[lang].map((p) => `<p>${esc(p)}</p>`).join("");
+    $("quotes").innerHTML = S.quotes.map((x) => {
+      const showOrig = (lang === "en" && !x.origEn) || (lang === "zh" && x.origEn);
+      return `<a class="quote reveal" href="${esc(x.url)}" target="_blank" rel="noopener"><q>${esc(x[lang])}</q>${showOrig ? `<span class="orig">${esc(lang === "en" ? x.zh : x.en)}</span>` : ""}<time>@BruceBlue · ${x.date}</time></a>`;
+    }).join("");
+    $("reads").innerHTML = S.reads.map((r) =>
+      `<a class="read reveal" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="k">${r.kind}</span><span><b>${esc(r[lang])}</b><small>${r.date} · ${esc(t.readOnX)}</small></span></a>`).join("");
+
+    // projects
     const tabs = [["all", t.all], ...Object.entries(S.pillars).map(([k, v]) => [k, v[lang]])];
     $("filters").innerHTML = tabs.map(([k, n]) => `<button role="tab" data-k="${k}" aria-selected="${k === pillar}">${esc(n)}</button>`).join("");
     $("projects").innerHTML = S.projects.filter((p) => pillar === "all" || p.pillar === pillar).map((p, i) => card(p, i)).join("");
@@ -79,18 +85,15 @@
     // lab
     $("lab-grid").innerHTML = S.lab.map((l) => {
       const r = byName[l.repo] || {};
-      return `<a href="${esc(l.demo || r.url || S.github + "/" + l.repo)}" target="_blank" rel="noopener"><span class="ic">${esc(l.icon)}</span><span><b>${esc(l.repo)}</b><p>${esc(l[lang])}</p><span class="meta">★ ${r.stars ?? 0}${r.lang ? " · " + esc(r.lang) : ""}${l.demo ? " · demo ↗" : ""}</span></span></a>`;
+      return `<a class="reveal" href="${esc(l.demo || r.url || S.github + "/" + l.repo)}" target="_blank" rel="noopener"><span class="ic">${esc(l.icon)}</span><span><b>${esc(l.repo)}</b><p>${esc(l[lang])}</p><span class="meta">★ ${r.stars ?? 0}${r.lang ? " · " + esc(r.lang) : ""}${l.demo ? " · demo ↗" : ""}</span></span></a>`;
     }).join("");
 
-    // timeline
     $("timeline").innerHTML = R.slice(0, 8).map((r) =>
       `<li><time>${r.pushed}</time><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)}</a><span>${esc(r.description || "—")}</span></li>`).join("");
 
-    // posts
     $("posts").innerHTML = S.posts.map((p) =>
       `<a class="post" href="${esc(p.url)}" target="_blank" rel="noopener"><div class="post-meta"><em>${esc(p.tag)}</em><span>${p.date}</span></div><q>${esc(p[lang])}</q>${lang === "en" ? `<span class="orig">${esc(p.zh)}</span>` : ""}</a>`).join("");
 
-    // all repos
     $("repo-count").textContent = R.length;
     $("repos").innerHTML = [...R].sort((a, b) => b.stars - a.stars).map((r) =>
       `<a class="repo" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="rn">${esc(r.name)}</span><span class="rs">★ ${r.stars}${r.lang ? " · " + esc(r.lang) : ""}</span><span class="rd">${esc(r.description || "—")}</span></a>`).join("");
@@ -106,7 +109,7 @@
     const links = p.links.map((l) => `<a class="${l.demo ? "demo" : ""}" href="${esc(l.u)}" target="_blank" rel="noopener">${esc(l.demo ? t.openDemo + " ↗" : pick(l))}</a>`).join("")
       + (repo ? `<a href="${esc(repo.url)}" target="_blank" rel="noopener">${esc(t.repo)}</a>` : "");
     return `<article class="card reveal" style="--pc:var(--c-${p.pillar})">
-      <div class="card-top"><span class="ref">U1.${String(i + 1).padStart(2, "0")} · ${esc(S.pillars[p.pillar][lang])}</span><span class="status ${p.status === "draft" ? "draft" : ""}">${esc(st)}</span></div>
+      <div class="card-top"><span class="ref">No. ${String(i + 1).padStart(2, "0")} · ${esc(S.pillars[p.pillar][lang])}</span><span class="status ${p.status === "draft" ? "draft" : ""}">${esc(st)}</span></div>
       <h3>${esc(c.t)}</h3><p>${esc(c.d)}</p>
       ${metrics ? `<div class="metrics">${metrics}</div>` : `<div style="margin-top:auto"></div>`}
       <div class="links">${links}${repo ? `<a class="src" href="${esc(repo.url)}#readme" target="_blank" rel="noopener">${esc(t.source)} · ${repo.pushed}</a>` : ""}</div></article>`;
@@ -114,12 +117,9 @@
 
   /* ---------- NAND toy ---------- */
   const GATES = {
-    NAND: { n: 1, f: (a, b) => !(a && b) },
-    NOT: { n: 1, f: (a) => !a, one: true },
-    AND: { n: 2, f: (a, b) => a && b },
-    OR: { n: 3, f: (a, b) => a || b },
-    NOR: { n: 4, f: (a, b) => !(a || b) },
-    XOR: { n: 4, f: (a, b) => a !== b },
+    NAND: { n: 1, f: (a, b) => !(a && b) }, NOT: { n: 1, f: (a) => !a, one: true },
+    AND: { n: 2, f: (a, b) => a && b }, OR: { n: 3, f: (a, b) => a || b },
+    NOR: { n: 4, f: (a, b) => !(a || b) }, XOR: { n: 4, f: (a, b) => a !== b },
   };
   let gate = "NAND", A = false, B = false;
   function renderToy() {
@@ -142,7 +142,7 @@
   }
   document.querySelector(".toy").addEventListener("click", (e) => {
     const sw = e.target.closest("[data-in]"), gb = e.target.closest("[data-g]");
-    if (sw && !sw.disabled) { if (sw.dataset.in === "a") A = !A; else B = !B; pulse(); }
+    if (sw && !sw.disabled) { if (sw.dataset.in === "a") A = !A; else B = !B; stir(1.6); }
     if (gb) gate = gb.dataset.g;
     if (sw || gb) renderToy();
   });
@@ -150,16 +150,13 @@
   /* ---------- events ---------- */
   document.querySelector(".lang").onclick = (e) => { const l = e.target.dataset.lang; if (l && l !== lang) { lang = l; store.set("lang", l); render(); } };
   $("filters").onclick = (e) => { const k = e.target.dataset?.k; if (k) { pillar = k; render(); } };
-
-  // 彩蛋：键入 nand
   let buf = "";
   addEventListener("keydown", (e) => {
     if (e.target.closest && e.target.closest("input,textarea")) return;
     buf = (buf + (e.key || "")).slice(-4).toLowerCase();
-    if (buf === "nand") { const el = $("toast"); el.textContent = T().konami; el.classList.add("show"); burst(); setTimeout(() => el.classList.remove("show"), 2600); }
+    if (buf === "nand") { const el = $("toast"); el.textContent = T().konami; el.classList.add("show"); stir(3); setTimeout(() => el.classList.remove("show"), 2600); }
   });
 
-  /* ---------- reveal on scroll ---------- */
   let io;
   function observeReveal() {
     if (reduced || !("IntersectionObserver" in window)) { document.querySelectorAll(".reveal").forEach((el) => el.classList.add("in")); return; }
@@ -167,72 +164,149 @@
     document.querySelectorAll(".reveal:not(.in)").forEach((el) => io.observe(el));
   }
 
-  /* ---------- circuit traces background ---------- */
-  const cv = $("traces"), ctx = cv.getContext("2d");
-  let W = 0, H = 0, traces = [], pulses = [], col = {};
-  function readColors() {
-    const cs = getComputedStyle(root);
-    col = { line: cs.getPropertyValue("--line").trim(), signal: cs.getPropertyValue("--signal").trim(), copper: cs.getPropertyValue("--copper").trim() };
-    if (reduced) draw();
-  }
-  function build() {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    W = cv.clientWidth; H = cv.clientHeight;
-    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const G = 24, n = Math.round(W / 70);
-    let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-    traces = [];
-    for (let i = 0; i < n; i++) {
-      let x = Math.round((rnd() * W) / G) * G, y = Math.round((rnd() * H * 0.9) / G) * G;
-      const pts = [[x, y]];
-      let dir = rnd() < 0.5 ? 0 : 1;
-      for (let s = 0; s < 4; s++) {
-        const len = (2 + Math.floor(rnd() * 7)) * G;
-        if (dir === 0) x += rnd() < 0.5 ? len : -len; else y += len;
-        pts.push([x, y]); dir = 1 - dir;
+  /* ---------- 浪花：沿浪尖撒泡沫 ---------- */
+  (function foam() {
+    const path = document.querySelector(".w-mid"), g = $("foam");
+    if (!path || !path.getTotalLength) return;
+    const len = path.getTotalLength(), out = [];
+    let seed = 3; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let s = 0; s < len; s += 7) {
+      const p = path.getPointAtLength(s);
+      if (p.y > 236) continue;
+      const crest = p.x > 760 && p.x < 1100 && p.y < 150;
+      if (crest || rnd() < 0.05) {
+        const r = crest ? 2 + rnd() * (p.y < 90 ? 7 : 4) : 1.5 + rnd() * 2;
+        out.push(`<circle cx="${(p.x + (rnd() - 0.5) * 6).toFixed(1)}" cy="${(p.y - r * 0.6).toFixed(1)}" r="${r.toFixed(1)}"/>`);
+        if (crest && rnd() < 0.5) out.push(`<circle cx="${(p.x + (rnd() - 0.5) * 14).toFixed(1)}" cy="${(p.y - 6 - rnd() * 10).toFixed(1)}" r="${(1 + rnd() * 2).toFixed(1)}"/>`);
       }
-      let total = 0; const seg = [];
-      for (let k = 1; k < pts.length; k++) { const d = Math.abs(pts[k][0] - pts[k - 1][0]) + Math.abs(pts[k][1] - pts[k - 1][1]); seg.push(d); total += d; }
-      traces.push({ pts, seg, total });
     }
-    pulses = traces.map((t, i) => ({ t: i, p: rnd() * t.total, v: 40 + rnd() * 60 }));
+    g.innerHTML = out.join("");
+  })();
+
+  /* ---------- 星夜：漩涡粒子 + 星辰 + 粒子浪 ---------- */
+  const cv = $("sky"), ctx = cv.getContext("2d"), hero = document.querySelector(".hero");
+  let W = 0, H = 0, P = [], stars = [], vort = [], col = {}, light = false, t0 = 0, boost = 1;
+  const mouse = { x: -9999, y: -9999, on: false };
+
+  function readColors() {
+    const cs = getComputedStyle(root), v = (n) => cs.getPropertyValue(n).trim();
+    light = root.dataset.theme === "light" || (!root.dataset.theme && matchMedia("(prefers-color-scheme: light)").matches);
+    col = { bg: v("--bg"), bg2: v("--bg2"), blue: v("--blue"), deep: v("--blue-deep"), gold: v("--gold"), foam: v("--foam"), ink: v("--ink") };
+    col.strokes = light ? ["#1f4fa3", "#3d6bc0", "#13306e", "#6a8cc9", "#a87a12"] : ["#2f5fbf", "#4c8dff", "#7fb0ff", "#a9c8ff", "#1f4fa3", "#f4c95d"];
+    if (reduced) frame(0);
   }
-  function at(tr, d) {
-    for (let k = 0; k < tr.seg.length; k++) {
-      if (d <= tr.seg[k]) { const [x0, y0] = tr.pts[k], [x1, y1] = tr.pts[k + 1], f = d / tr.seg[k]; return [x0 + (x1 - x0) * f, y0 + (y1 - y0) * f]; }
-      d -= tr.seg[k];
+
+  function build() {
+    const dpr = Math.min(devicePixelRatio || 1, 1.5);
+    W = hero.clientWidth; H = hero.clientHeight;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    let seed = 11; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    vort = [
+      { x: 0.66, y: 0.24, r: 0.2, s: 1 }, { x: 0.36, y: 0.14, r: 0.13, s: -1 },
+      { x: 0.9, y: 0.48, r: 0.12, s: 1 }, { x: 0.12, y: 0.42, r: 0.11, s: -1 },
+    ];
+    const n = Math.round(Math.min(900, (W * H) / 1500));
+    P = Array.from({ length: n }, () => spawn(rnd, true));
+    stars = Array.from({ length: Math.max(6, Math.round(W / 140)) }, () => ({ x: rnd() * W, y: rnd() * H * 0.55, r: 1.2 + rnd() * 2.4, ph: rnd() * 6.28 }));
+    stars.push({ x: W * 0.66, y: H * 0.24, r: 3.6, ph: 0, big: true });
+  }
+  function spawn(rnd = Math.random, init) {
+    return { x: rnd() * W, y: rnd() * H * 0.72, tail: [], life: 80 + rnd() * 160, age: init ? rnd() * 200 : 0, c: Math.floor(rnd() * 6), w: 0.8 + rnd() * 1.8 };
+  }
+  function field(x, y, t) {
+    let vx = 0.55, vy = 0.18 * Math.sin(y * 0.012 + t * 0.4) + 0.12 * Math.cos(x * 0.008 - t * 0.3);
+    for (const v of vort) {
+      const cx = v.x * W, cy = v.y * H, R = v.r * W, dx = x - cx, dy = y - cy, d2 = dx * dx + dy * dy, k = Math.exp(-d2 / (R * R)) * 2.4 * v.s;
+      vx += -dy / (Math.sqrt(d2) + 1) * k; vy += dx / (Math.sqrt(d2) + 1) * k;
     }
-    return tr.pts[tr.pts.length - 1];
+    if (mouse.on) {
+      const dx = x - mouse.x, dy = y - mouse.y, d2 = dx * dx + dy * dy, k = Math.exp(-d2 / 9000) * 4;
+      vx += -dy / (Math.sqrt(d2) + 1) * k; vy += dx / (Math.sqrt(d2) + 1) * k;
+    }
+    return [vx, vy];
   }
-  let mx = -999, my = -999;
-  addEventListener("pointermove", (e) => { mx = e.clientX; my = e.clientY + scrollY; }, { passive: true });
-  function draw() {
+  function step(t) {
+    for (let i = 0; i < P.length; i++) {
+      const p = P[i], [vx, vy] = field(p.x, p.y, t);
+      p.tail.push(p.x, p.y); if (p.tail.length > 16) p.tail.splice(0, 2);
+      p.x += vx * 1.25 * boost; p.y += vy * 1.25 * boost; p.age++;
+      if (p.age > p.life || p.x > W + 20 || p.x < -20 || p.y < -20 || p.y > H * 0.78) P[i] = spawn();
+    }
+  }
+  function frame(t) {
     ctx.clearRect(0, 0, W, H);
-    ctx.lineWidth = 1.5; ctx.strokeStyle = col.line; ctx.fillStyle = col.line;
-    for (const tr of traces) {
-      ctx.beginPath(); tr.pts.forEach(([x, y], k) => (k ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.stroke();
-      for (const [x, y] of [tr.pts[0], tr.pts[tr.pts.length - 1]]) { ctx.beginPath(); ctx.arc(x, y, 3.2, 0, 7); ctx.stroke(); }
+    // 漩涡的晕光
+    for (const v of vort) {
+      const g = ctx.createRadialGradient(v.x * W, v.y * H, 0, v.x * W, v.y * H, v.r * W * 1.2);
+      g.addColorStop(0, light ? "rgba(31,79,163,.08)" : "rgba(76,141,255,.10)"); g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     }
-    for (const pu of pulses) {
-      const tr = traces[pu.t], [x, y] = at(tr, pu.p);
-      const near = Math.hypot(x - mx, y - my) < 140;
-      ctx.shadowBlur = near ? 18 : 10; ctx.shadowColor = near ? col.copper : col.signal; ctx.fillStyle = near ? col.copper : col.signal;
-      ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.arc(x, y, near ? 3.2 : 2.2, 0, 7); ctx.fill();
+    // 笔触粒子（梵高式短笔触）
+    ctx.lineCap = "round";
+    for (const p of P) {
+      const a = Math.min(1, p.age / 20) * Math.min(1, (p.life - p.age) / 30);
+      if (a <= 0 || p.tail.length < 4) continue;
+      ctx.globalAlpha = a * (light ? 0.55 : 0.7);
+      ctx.strokeStyle = col.strokes[p.c % col.strokes.length]; ctx.lineWidth = p.w;
+      ctx.beginPath(); ctx.moveTo(p.tail[0], p.tail[1]);
+      for (let k = 2; k < p.tail.length; k += 2) ctx.lineTo(p.tail[k], p.tail[k + 1]);
+      ctx.lineTo(p.x, p.y); ctx.stroke();
     }
-    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+    ctx.globalAlpha = 1;
+    // 星辰与光环
+    for (const s of stars) {
+      const pulse = 0.6 + 0.4 * Math.sin(t * 1.4 + s.ph);
+      const R = s.big ? 46 : s.r * 7;
+      const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, R);
+      g.addColorStop(0, light ? "rgba(168,122,18,.35)" : "rgba(255,226,140,.55)"); g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(s.x, s.y, R, 0, 6.29); ctx.fill();
+      ctx.strokeStyle = col.gold; ctx.globalAlpha = 0.25 * pulse; ctx.lineWidth = 1;
+      for (let k = 1; k <= (s.big ? 3 : 1); k++) { ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 3 + k * (s.big ? 9 : 5) + pulse * 2, 0, 6.29); ctx.stroke(); }
+      ctx.globalAlpha = 1; ctx.fillStyle = col.gold; ctx.beginPath(); ctx.arc(s.x, s.y, s.r * (0.85 + 0.15 * pulse), 0, 6.29); ctx.fill();
+    }
+    // 月牙
+    const mx = W * 0.9, my = Math.min(90, H * 0.12), mr = Math.max(16, Math.min(26, W * 0.018));
+    const mg = ctx.createRadialGradient(mx, my, mr, mx, my, mr * 4);
+    mg.addColorStop(0, light ? "rgba(168,122,18,.25)" : "rgba(255,226,140,.35)"); mg.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(mx, my, mr * 4, 0, 6.29); ctx.fill();
+    ctx.fillStyle = col.gold; ctx.beginPath(); ctx.arc(mx, my, mr, 0, 6.29); ctx.fill();
+    ctx.globalCompositeOperation = "destination-out"; ctx.beginPath(); ctx.arc(mx - mr * 0.45, my - mr * 0.25, mr * 0.88, 0, 6.29); ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
+    // 粒子浪
+    const top = H * 0.6, cols = Math.round(W / 12), rows = 12;
+    for (let r = 0; r < rows; r++) {
+      const depth = r / (rows - 1), baseY = top + depth * (H * 0.36);
+      for (let c = 0; c <= cols; c++) {
+        const x = (c / cols) * W;
+        let y = baseY + Math.sin(x * 0.006 + t * 0.9 + r * 0.55) * (16 + depth * 10) + Math.sin(x * 0.017 - t * 1.3 + r) * 6;
+        const dx = x - mouse.x, dy = baseY - mouse.y, md = Math.exp(-(dx * dx + dy * dy) / 14000);
+        y -= md * 26 * Math.sin(t * 6 - Math.sqrt(dx * dx + dy * dy) * 0.05);
+        const crest = Math.max(0, Math.sin(x * 0.006 + t * 0.9 + r * 0.55));
+        ctx.globalAlpha = (0.25 + depth * 0.55) * (light ? 0.8 : 1);
+        ctx.fillStyle = crest > 0.85 && r < 6 ? col.foam : depth > 0.5 ? col.deep : col.blue;
+        ctx.beginPath(); ctx.arc(x, y, 0.8 + depth * 1.6 + crest * 0.8 + md * 1.5, 0, 6.29); ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
   }
-  let last = 0, running = true;
+
+  let running = false, visible = true, last = 0;
   function loop(ts) {
-    const dt = Math.min((ts - last) / 1000, 0.05); last = ts;
-    for (const pu of pulses) { const near = traces[pu.t] && Math.hypot(...at(traces[pu.t], pu.p).map((v, i) => v - (i ? my : mx))) < 140; pu.p = (pu.p + pu.v * dt * (near ? 3 : 1)) % traces[pu.t].total; }
-    draw();
+    const t = ts / 1000;
+    if (!t0) t0 = t;
+    step(t - t0); frame(t - t0);
+    boost += (1 - boost) * 0.03;
     if (running) requestAnimationFrame(loop);
   }
-  function pulse() { for (const pu of pulses) pu.v *= 2.2; setTimeout(() => pulses.forEach((pu) => (pu.v /= 2.2)), 500); }
-  function burst() { pulse(); }
-  document.addEventListener("visibilitychange", () => { const vis = !document.hidden; if (vis && !running && !reduced) { running = true; requestAnimationFrame((t) => { last = t; loop(t); }); } else running = vis; });
-  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { build(); if (reduced) draw(); }, 150); });
+  function start() { if (!running && !reduced && visible && !document.hidden) { running = true; requestAnimationFrame(loop); } }
+  function stop() { running = false; }
+  function stir(k) { boost = k; }
+  hero.addEventListener("pointermove", (e) => { const r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.on = true; }, { passive: true });
+  hero.addEventListener("pointerleave", () => { mouse.on = false; mouse.x = mouse.y = -9999; });
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; visible ? start() : stop(); }).observe(hero);
+  document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
+  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { build(); if (reduced) { for (let i = 0; i < 80; i++) step(i / 30); frame(2); } }, 150); });
 
-  readColors(); build(); render();
-  if (reduced) draw(); else requestAnimationFrame((t) => { last = t; loop(t); });
+  render(); readColors(); build();
+  if (reduced) { for (let i = 0; i < 80; i++) step(i / 30); frame(2); } else start();
 })();

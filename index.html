@@ -5,21 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>BruceBlue · Research</title>
   <meta name="description" content="BruceBlue — AI researcher, former VC, TapeOut frontier research. Public research on AI, on-chain circuits and protocols." />
-  <meta property="og:title" content="BruceBlue · 门电路是一种新语言" />
+  <meta property="og:title" content="BruceBlue 🌊 门电路是一种新语言" />
   <meta property="og:description" content="AI、链上电路与协议提案的公开研究。大多数点开就能跑。" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0f0d'/%3E%3Cpath d='M9 9h7a7 7 0 0 1 0 14H9z' fill='none' stroke='%2358f0a8' stroke-width='2.5'/%3E%3Ccircle cx='25.5' cy='16' r='2.4' fill='none' stroke='%2358f0a8' stroke-width='2'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23081030'/%3E%3Cpath d='M4 22c5 0 7-9 14-9 4 0 6 3 4 5-1.5 1.5-4 .5-3.5-1.5' fill='none' stroke='%236fa8ff' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='24' cy='8' r='2.2' fill='%23f4c95d'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
-  <canvas id="traces" aria-hidden="true"></canvas>
-
   <header class="nav">
     <div class="wrap nav-inner">
-      <a class="brand" href="#top"><span class="brand-gate" aria-hidden="true"></span>BruceBlue</a>
+      <a class="brand" href="#top">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M3 22c5 0 7-9 14-9 4 0 6 3 4 5-1.5 1.5-4 .5-3.5-1.5"/><circle cx="25" cy="8" r="2.2"/></svg>
+        BruceBlue
+      </a>
       <nav>
+        <a href="#about" data-i="navAbout"></a>
         <a href="#research" data-i="navResearch"></a>
         <a href="#taps" data-i="navTaps"></a>
         <a href="#lab" data-i="navLab"></a>
@@ -28,75 +30,107 @@
       <div class="lang" role="group" aria-label="Language">
         <button data-lang="zh">中</button><button data-lang="en">EN</button>
       </div>
-      <button class="theme" id="theme" aria-label="Toggle theme">◐</button>
+      <button class="theme" id="theme" aria-label="Toggle theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+      </button>
     </div>
   </header>
 
   <main id="top">
-    <section class="hero wrap">
-      <div class="hero-text">
-        <p class="kicker"><span class="led"></span><span data-i="kicker"></span></p>
-        <h1><span class="h1a" data-i="h1a"></span><span class="h1b" data-i="h1b"></span></h1>
-        <p class="lede" data-i="lede"></p>
-        <div class="cta">
-          <a class="btn primary" href="#research" data-i="ctaResearch"></a>
-          <a class="btn" id="x-link" target="_blank" rel="noopener"><span data-i="ctaX"></span> ↗</a>
-          <a class="btn" id="gh-link" target="_blank" rel="noopener"><span data-i="ctaGh"></span> ↗</a>
+    <section class="hero">
+      <canvas id="sky" aria-hidden="true"></canvas>
+      <div class="wrap hero-grid">
+        <div class="hero-text">
+          <p class="kicker"><span class="star-dot"></span><span data-i="kicker"></span></p>
+          <h1><span class="h1a" data-i="h1a"></span><span class="h1b" data-i="h1b"></span></h1>
+          <p class="lede" data-i="lede"></p>
+          <div class="cta">
+            <a class="btn primary" href="#research" data-i="ctaResearch"></a>
+            <a class="btn" id="x-link" target="_blank" rel="noopener"><span data-i="ctaX"></span> ↗</a>
+            <a class="btn" id="gh-link" target="_blank" rel="noopener"><span data-i="ctaGh"></span> ↗</a>
+          </div>
+          <ul class="roles" id="roles"></ul>
         </div>
-        <ul class="roles" id="roles"></ul>
+
+        <aside class="toy" aria-label="NAND toy">
+          <div class="toy-head"><span class="silk">No. 00 · NAND</span><b data-i="toyTitle"></b></div>
+          <p class="toy-hint" data-i="toyHint"></p>
+          <div class="gates" id="gates" role="tablist"></div>
+          <div class="board">
+            <div class="inputs">
+              <button class="sw" data-in="a" aria-pressed="false"><span>A</span><i></i></button>
+              <button class="sw" data-in="b" aria-pressed="false"><span>B</span><i></i></button>
+            </div>
+            <svg class="wire" viewBox="0 0 120 80" aria-hidden="true"><path id="wire-a" d="M0 20 H40 C60 20 60 40 80 40 H120"/><path id="wire-b" d="M0 60 H40 C60 60 60 40 80 40"/></svg>
+            <div class="chip"><b id="gate-name">NAND</b><small id="gate-count"></small></div>
+            <svg class="wire out" viewBox="0 0 60 80" aria-hidden="true"><path id="wire-o" d="M0 40 H60"/></svg>
+            <div class="lamp" id="lamp"><i></i><small data-i="toyOut"></small></div>
+          </div>
+          <table class="truth" id="truth"></table>
+        </aside>
       </div>
 
-      <aside class="toy" aria-label="NAND toy">
-        <div class="toy-head"><span class="silk">U0 · 74HC00</span><b data-i="toyTitle"></b></div>
-        <p class="toy-hint" data-i="toyHint"></p>
-        <div class="gates" id="gates" role="tablist"></div>
-        <div class="board">
-          <div class="inputs">
-            <button class="sw" data-in="a" aria-pressed="false"><span>A</span><i></i></button>
-            <button class="sw" data-in="b" aria-pressed="false"><span>B</span><i></i></button>
-          </div>
-          <svg class="wire" viewBox="0 0 120 80" aria-hidden="true"><path id="wire-a" d="M0 20 H40 C60 20 60 40 80 40 H120"/><path id="wire-b" d="M0 60 H40 C60 60 60 40 80 40"/></svg>
-          <div class="chip"><b id="gate-name">NAND</b><small id="gate-count"></small></div>
-          <svg class="wire out" viewBox="0 0 60 80" aria-hidden="true"><path id="wire-o" d="M0 40 H60"/></svg>
-          <div class="lamp" id="lamp"><i></i><small data-i="toyOut"></small></div>
-        </div>
-        <table class="truth" id="truth"></table>
-      </aside>
+      <svg class="great-wave" viewBox="0 0 1440 240" preserveAspectRatio="none" aria-hidden="true">
+        <path class="w-back" d="M0 150 C160 104 300 176 470 128 S780 70 960 126 S1270 176 1440 118 V240 H0Z"/>
+        <path class="w-mid" d="M0 182 C220 150 420 214 620 172 C770 140 830 70 940 48 C1030 30 1104 66 1094 118 C1086 156 1040 162 1024 138 C1012 120 1028 104 1046 112 C1018 86 962 96 952 138 C942 186 1004 212 1090 200 C1236 184 1334 160 1440 174 V240 H0Z"/>
+        <g class="w-foam" id="foam"></g>
+        <path class="w-front" d="M0 214 C240 194 480 236 720 214 S1200 192 1440 218 V240 H0Z"/>
+      </svg>
     </section>
 
-    <section class="wrap">
+    <section class="wrap stats-wrap">
       <dl class="stats" id="stats"></dl>
     </section>
 
+    <section class="section wrap" id="about">
+      <div class="sec-head"><span class="idx">壹</span><h2 data-i="secAbout"></h2></div>
+      <div class="about">
+        <div class="about-text">
+          <div class="seal" aria-hidden="true"><span>蓝</span></div>
+          <div id="about-body"></div>
+        </div>
+        <div class="about-side">
+          <h3 class="mini" data-i="aboutQuotes"></h3>
+          <div class="quotes" id="quotes"></div>
+        </div>
+      </div>
+      <h3 class="mini reads-title" data-i="aboutReads"></h3>
+      <div class="reads" id="reads"></div>
+    </section>
+
+    <div class="seigaiha" aria-hidden="true"></div>
+
     <section class="section wrap" id="research">
       <div class="sec-head">
-        <span class="idx">U1</span><h2 data-i="secResearch"></h2>
+        <span class="idx">贰</span><h2 data-i="secResearch"></h2>
         <div class="filters" id="filters" role="tablist"></div>
       </div>
       <div class="grid" id="projects"></div>
     </section>
 
     <section class="section wrap" id="taps">
-      <div class="sec-head"><span class="idx">U2</span><h2 data-i="secTaps"></h2></div>
+      <div class="sec-head"><span class="idx">叁</span><h2 data-i="secTaps"></h2></div>
       <p class="sec-lede" data-i="tapsLede"></p>
       <div class="taps-summary" id="taps-summary"></div>
       <div id="taps-map"></div>
     </section>
 
     <section class="section wrap" id="lab">
-      <div class="sec-head"><span class="idx">U3</span><h2 data-i="secLab"></h2></div>
+      <div class="sec-head"><span class="idx">肆</span><h2 data-i="secLab"></h2></div>
       <p class="sec-lede" data-i="labLede"></p>
       <div class="lab" id="lab-grid"></div>
     </section>
 
+    <div class="seigaiha" aria-hidden="true"></div>
+
     <section class="section wrap split" id="log">
       <div>
-        <div class="sec-head"><span class="idx">U4</span><h2 data-i="secLog"></h2></div>
+        <div class="sec-head"><span class="idx">伍</span><h2 data-i="secLog"></h2></div>
         <p class="sec-lede" data-i="logNote"></p>
         <ol class="timeline" id="timeline"></ol>
       </div>
       <div id="x">
-        <div class="sec-head"><span class="idx">U5</span><h2 data-i="secX"></h2></div>
+        <div class="sec-head"><span class="idx">陆</span><h2 data-i="secX"></h2></div>
         <p class="sec-lede" data-i="xNote"></p>
         <div class="posts" id="posts"></div>
         <a class="more" id="x-more" target="_blank" rel="noopener" data-i="xMore"></a>
@@ -105,16 +139,19 @@
 
     <section class="section wrap" id="all">
       <details class="all">
-        <summary><span class="idx">U6</span><h2 data-i="secAll"></h2><span class="count" id="repo-count"></span></summary>
+        <summary><span class="idx">柒</span><h2 data-i="secAll"></h2><span class="count" id="repo-count"></span></summary>
         <div class="repo-list" id="repos"></div>
       </details>
     </section>
   </main>
 
-  <footer class="wrap foot">
-    <span><span data-i="synced"></span> <b id="synced"></b></span>
-    <span data-i="disclaimer"></span>
-    <span class="silk">type “nand”</span>
+  <footer class="foot">
+    <svg class="foot-wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 C180 10 360 60 540 34 S900 8 1080 34 S1320 56 1440 30 V60 H0Z"/></svg>
+    <div class="wrap foot-inner">
+      <span><span data-i="synced"></span> <b id="synced"></b></span>
+      <span data-i="disclaimer"></span>
+      <span class="silk">type “nand” · 🌊</span>
+    </div>
   </footer>
   <div class="toast" id="toast" role="status"></div>
 

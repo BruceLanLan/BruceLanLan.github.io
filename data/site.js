@@ -6,7 +6,7 @@ window.SITE = {
 
   ui: {
     zh: {
-      navResearch: "研究", navTaps: "协议", navLab: "实验场", navLog: "动态", navAll: "仓库",
+      navAbout: "关于", navResearch: "研究", navTaps: "协议", navLab: "实验场", navLog: "动态", navAll: "仓库",
       kicker: "研究员 · 前 VC · 基金会发起人",
       h1a: "门电路是一种新语言。",
       h1b: "我用它写 AI、写协议，也写钱。",
@@ -17,6 +17,7 @@ window.SITE = {
       toyHint: "拨动 A、B。再选一个门，看它要几个 NAND 才能拼出来。",
       toyNands: "个 NAND",
       toyOut: "输出",
+      secAbout: "关于我", aboutQuotes: "我在 X 上说过", aboutReads: "长文与长帖", readOnX: "在 X 上读 ↗",
       secResearch: "精选研究", secTaps: "TapeOut 协议提案地图", secLab: "实验场", secLog: "最近在推进", secX: "在 X 上说", secAll: "全部公开仓库",
       all: "全部",
       tapsLede: "TAP 是 TapeOut 的协议提案，类似以太坊的 EIP。下面每一格都是我提交的一份草案，颜色代表它在官方仓库里的状态。数据自动同步自 TapeOutProtocol/TAPs。",
@@ -34,7 +35,7 @@ window.SITE = {
       konami: "你找到了一个 NAND 门 🌊 两个输入，一个真相。",
     },
     en: {
-      navResearch: "Research", navTaps: "Protocols", navLab: "Lab", navLog: "Log", navAll: "Repos",
+      navAbout: "About", navResearch: "Research", navTaps: "Protocols", navLab: "Lab", navLog: "Log", navAll: "Repos",
       kicker: "Researcher · ex-VC · Foundation initiator",
       h1a: "Logic gates are a new language.",
       h1b: "I use them to write AI, protocols — and money.",
@@ -45,6 +46,7 @@ window.SITE = {
       toyHint: "Flip A and B. Then pick a gate and see how many NANDs it takes to build.",
       toyNands: "NAND",
       toyOut: "out",
+      secAbout: "About me", aboutQuotes: "In my own words, on X", aboutReads: "Long reads", readOnX: "Read on X ↗",
       secResearch: "Selected research", secTaps: "Map of my TapeOut proposals", secLab: "The lab", secLog: "Recently shipped", secX: "On X", secAll: "All public repos",
       all: "All",
       tapsLede: "TAPs are TapeOut's protocol proposals, much like Ethereum's EIPs. Every cell below is a draft I submitted; its colour is its status in the official repo. Synced automatically from TapeOutProtocol/TAPs.",
@@ -67,6 +69,40 @@ window.SITE = {
     zh: ["AI 研究员", "TapeOut 前沿研究", "@TapeOutCF 社区基金会发起人", "前 GP · Bing Ventures / 高榕资本 / 真格基金"],
     en: ["AI researcher", "TapeOut frontier research", "Initiator, @TapeOutCF Community Foundation", "Former GP · Bing Ventures / Gaorong / ZhenFund"],
   },
+
+  // 关于我：叙述只用公开自述；引文为 X 原文摘录（日期由推文 ID 换算）
+  about: {
+    zh: [
+      "我是 BruceBlue，蓝。密码学硕士出身，创过业，后来做了七年风险投资，在 Bing Ventures、高榕资本、真格基金做过 GP。2021 年下注零食很忙时，它只在湖南开了 450 家店；后来它在港交所上市，门店超过 2.1 万家。我也是 UniSat 的投资人和领投方。",
+      "现在我从投资桌前退了下来，把时间花在 AI 和 TapeOut 链上电路上：写协议提案、做能在浏览器里跑的实验，也在发起 TapeOut 社区基金会。",
+      "我给自己的称呼是“金融道士”：用 VC 加玄学的眼光看投资，也看技术。",
+    ],
+    en: [
+      "I'm BruceBlue. I trained in cryptography, started a company, then spent seven years in venture capital as a GP at Bing Ventures, Gaorong and ZhenFund. When we bet on 零食很忙 (Snack Busy) in 2021 it had 450 stores in Hunan; it later listed in Hong Kong with more than 21,000. I was also an investor in, and lead investor of, UniSat.",
+      "These days I've stepped back from the investment desk to work on AI and TapeOut's on-chain circuits: writing protocol proposals, building experiments that run in the browser, and initiating the TapeOut Community Foundation.",
+      "I call myself a \"financial Taoist\": I look at investing — and technology — through a VC's eye and a mystic's.",
+    ],
+  },
+  quotes: [
+    { date: "2026-09-22", url: "https://x.com/BruceBlue/status/2102223652523856183",
+      zh: "2011 年，看到 BTC，密码学硕士的我认为它是骗局，因为我没有去读白皮书，直接认为它就是 Q 币。",
+      en: "In 2011 I saw BTC and — with a master's in cryptography — decided it was a scam, because I never read the white paper and just assumed it was Q-coins." },
+    { date: "2026-01-28", url: "https://x.com/BruceBlue/status/2016505192766976363",
+      zh: "过往7年的投资经验告诉我：往往赚大钱的项目，都是反直觉的！只有你看得比创始人更了解、更懂这家公司的时候，才能够下重注、敢陪跑。",
+      en: "Seven years of investing taught me that the big winners are usually counter-intuitive. Only when you understand a company better than its founder can you bet big and stay for the ride." },
+    { date: "2026-10-04", url: "https://x.com/BruceBlue/status/2106598146109567056",
+      zh: "一段逻辑成为可定位、可验证、可引用的链上对象后，后来的人会怎样使用它？",
+      en: "Once a piece of logic becomes an on-chain object you can locate, verify and cite — how will the people who come after use it?" },
+    { date: "2026-10-24", url: "https://x.com/BruceBlue/status/2113904619315503121",
+      zh: "AI Agent 的下一阶段不是更多工具，而是身份、能力、权限，以及陌生人能独立核验的结果。",
+      en: "The next stage for AI agents is not more tools. It is identity, capability, authority and results a stranger can verify alone.", origEn: true },
+  ],
+  reads: [
+    { date: "2026-08-17", url: "https://x.com/BruceBlue/article/2089205423798911412", zh: "当 Token 开始变成晶体管：我为什么认真看 Tapeout", en: "When tokens start turning into transistors: why I take TapeOut seriously", kind: "article" },
+    { date: "2026-09-15", url: "https://x.com/BruceBlue/article/2099774044023542173", zh: "The Day TapeOut Launchpad Gave BEM a Second Clock", en: "The Day TapeOut Launchpad Gave BEM a Second Clock", kind: "article" },
+    { date: "2026-10-04", url: "https://x.com/BruceBlue/status/2106598146109567056", zh: "个人实验怎样变成公共积木", en: "How a personal experiment becomes a public building block", kind: "article" },
+    { date: "2026-10-24", url: "https://x.com/BruceBlue/status/2113904619315503121", zh: "TapeOut Agent Universe：把 22 份现有草案和 3 份新草案连成一张图", en: "TapeOut Agent Universe: one map joining 22 existing drafts and 3 new ones", kind: "thread" },
+  ],
 
   pillars: {
     circuits: { zh: "链上电路", en: "On-chain circuits" },
