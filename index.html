@@ -70,11 +70,70 @@
         </aside>
       </div>
 
-      <svg class="great-wave" viewBox="0 0 1440 240" preserveAspectRatio="none" aria-hidden="true">
-        <path class="w-back" d="M0 150 C160 104 300 176 470 128 S780 70 960 126 S1270 176 1440 118 V240 H0Z"/>
-        <path class="w-mid" d="M0 182 C220 150 420 214 620 172 C770 140 830 70 940 48 C1030 30 1104 66 1094 118 C1086 156 1040 162 1024 138 C1012 120 1028 104 1046 112 C1018 86 962 96 952 138 C942 186 1004 212 1090 200 C1236 184 1334 160 1440 174 V240 H0Z"/>
+      <div class="cartouche" aria-hidden="true"><span class="ct-title" data-i="cartouche"></span><span class="ct-seal">蓝</span></div>
+
+      <svg class="great-wave" viewBox="0 0 1440 330" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="g-wave" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color: var(--wave-hi)" /><stop offset="1" style="stop-color: var(--wave-lo)" />
+          </linearGradient>
+          <linearGradient id="g-back" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color: var(--wave-back)" /><stop offset="1" style="stop-color: var(--wave-lo)" />
+          </linearGradient>
+          <linearGradient id="g-mtn" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color: var(--mountain-hi)" /><stop offset="1" style="stop-color: var(--mountain)" />
+          </linearGradient>
+          <!-- 油画质感：笔刷毛边 + 厚涂光影 -->
+          <filter id="oil" x="-3%" y="-3%" width="106%" height="106%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.03 0.08" numOctaves="2" seed="4" result="n" />
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G" result="d" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.55 0.9" numOctaves="3" seed="9" result="fine" />
+            <feDiffuseLighting in="fine" surfaceScale="2.2" lighting-color="#ffffff" result="light"><feDistantLight azimuth="235" elevation="48" /></feDiffuseLighting>
+            <feComposite in="light" in2="d" operator="in" result="lit" />
+            <feComposite in="d" in2="lit" operator="arithmetic" k1="0.95" k2="0.22" k3="0" k4="0" />
+          </filter>
+        </defs>
+
+        <!-- 霞云（kasumi） -->
+        <g class="kasumi">
+          <rect x="60" y="92" width="420" height="22" rx="11" /><rect x="180" y="122" width="300" height="16" rx="8" />
+          <rect x="1040" y="70" width="340" height="20" rx="10" /><rect x="1130" y="98" width="230" height="14" rx="7" />
+        </g>
+
+        <!-- 远山，山脊铺着走线 -->
+        <g class="mtn" filter="url(#oil)">
+          <path class="m-body" d="M150 250 L300 128 Q318 114 336 128 L500 250 Z" />
+          <path class="m-snow" d="M300 128 Q318 114 336 128 L362 150 L346 146 L334 160 L320 148 L306 162 L294 148 L278 150 Z" />
+          <path class="trace" d="M318 160 V196 H350 V232" /><circle class="pad" cx="318" cy="160" r="3.5" /><circle class="pad" cx="350" cy="232" r="3.5" />
+          <path class="trace" d="M300 176 V210 H262 V240" /><circle class="pad" cx="300" cy="176" r="3.5" /><circle class="pad" cx="262" cy="240" r="3.5" />
+        </g>
+
+        <!-- 后浪 -->
+        <path class="w-back" filter="url(#oil)" d="M0 214 C120 186 240 222 360 200 C470 180 520 150 600 166 C700 186 760 214 860 206 C1000 194 1120 170 1240 186 C1320 196 1380 190 1440 182 V330 H0Z" />
+
+        <!-- 主浪：卷起的浪头 -->
+        <g class="w-main" filter="url(#oil)">
+          <path class="w-mid" id="curl" d="M0 330 L0 268 C120 254 240 266 360 256 C470 246 540 214 610 168 C680 122 760 86 850 82 C950 78 1022 128 1012 184 C1005 221 967 236 942 221 C920 208 927 181 950 182 C934 156 894 156 877 188 C858 226 892 266 962 272 C1100 284 1260 256 1440 266 L1440 330 Z" />
+          <!-- 浪里的纹路 = 电路走线 -->
+          <path class="trace w" d="M300 300 C420 292 520 262 600 214 C660 178 712 146 760 128" /><circle class="via" cx="760" cy="128" r="4" />
+          <path class="trace w" d="M360 312 C470 304 560 272 640 226 L700 190 H760 V168" /><circle class="via" cx="760" cy="168" r="4" />
+          <path class="trace w" d="M460 322 C560 316 640 286 700 252 H800 V214" /><circle class="via" cx="800" cy="214" r="4" />
+          <path class="trace w" d="M820 112 C880 104 940 120 962 150" /><circle class="via" cx="820" cy="112" r="3.5" />
+          <path class="trace w" d="M640 300 H760 C820 300 860 290 900 284" /><circle class="via" cx="900" cy="284" r="3.5" />
+          <path class="trace w" d="M1060 300 C1160 292 1260 280 1380 286" /><circle class="via" cx="1060" cy="300" r="3.5" />
+        </g>
         <g class="w-foam" id="foam"></g>
-        <path class="w-front" d="M0 214 C240 194 480 236 720 214 S1200 192 1440 218 V240 H0Z"/>
+
+        <!-- 芯片小船 -->
+        <g class="boat" transform="translate(1150 262) rotate(-8)">
+          <rect x="-30" y="-9" width="60" height="18" rx="2" /><path d="M-22 -9v-6M-10 -9v-6M2 -9v-6M14 -9v-6M-22 9v6M-10 9v6M2 9v6M14 9v6" /><text x="0" y="4">NAND</text>
+        </g>
+        <g class="boat small" transform="translate(470 246) rotate(10)">
+          <rect x="-20" y="-7" width="40" height="14" rx="2" /><path d="M-12 -7v-5M0 -7v-5M12 -7v-5M-12 7v5M0 7v5M12 7v5" />
+        </g>
+
+        <!-- 前浪 -->
+        <path class="w-front" d="M0 304 C200 288 420 318 640 302 C860 286 1080 314 1300 300 C1360 296 1400 298 1440 302 V330 H0Z" />
       </svg>
     </section>
 

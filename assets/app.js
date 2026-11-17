@@ -170,14 +170,16 @@
     if (!path || !path.getTotalLength) return;
     const len = path.getTotalLength(), out = [];
     let seed = 3; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-    for (let s = 0; s < len; s += 7) {
+    for (let s = 0; s < len; s += 6) {
       const p = path.getPointAtLength(s);
-      if (p.y > 236) continue;
-      const crest = p.x > 760 && p.x < 1100 && p.y < 150;
-      if (crest || rnd() < 0.05) {
-        const r = crest ? 2 + rnd() * (p.y < 90 ? 7 : 4) : 1.5 + rnd() * 2;
-        out.push(`<circle cx="${(p.x + (rnd() - 0.5) * 6).toFixed(1)}" cy="${(p.y - r * 0.6).toFixed(1)}" r="${r.toFixed(1)}"/>`);
-        if (crest && rnd() < 0.5) out.push(`<circle cx="${(p.x + (rnd() - 0.5) * 14).toFixed(1)}" cy="${(p.y - 6 - rnd() * 10).toFixed(1)}" r="${(1 + rnd() * 2).toFixed(1)}"/>`);
+      if (p.y > 300 || p.x < 8 || p.x > 1432) continue;
+      const crest = p.x > 600 && p.x < 1016 && p.y < 205;
+      if (crest || (p.y < 280 && rnd() < 0.06)) {
+        const r = crest ? 2 + rnd() * (p.y < 130 ? 7.5 : 4.5) : 1.4 + rnd() * 2;
+        const cx = (p.x + (rnd() - 0.5) * 6).toFixed(1), cy = (p.y - r * 0.6).toFixed(1);
+        // 泡沫里混进“过孔”：空心圆环
+        out.push(crest && rnd() < 0.18 ? `<circle class="via-foam" cx="${cx}" cy="${cy}" r="${(r + 1.5).toFixed(1)}"/>` : `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}"/>`);
+        if (crest && rnd() < 0.55) out.push(`<circle cx="${(p.x + (rnd() - 0.5) * 16).toFixed(1)}" cy="${(p.y - 7 - rnd() * 13).toFixed(1)}" r="${(1 + rnd() * 2.2).toFixed(1)}"/>`);
       }
     }
     g.innerHTML = out.join("");
@@ -205,13 +207,13 @@
       { x: 0.66, y: 0.24, r: 0.2, s: 1 }, { x: 0.36, y: 0.14, r: 0.13, s: -1 },
       { x: 0.9, y: 0.48, r: 0.12, s: 1 }, { x: 0.12, y: 0.42, r: 0.11, s: -1 },
     ];
-    const n = Math.round(Math.min(900, (W * H) / 1500));
+    const n = Math.round(Math.min(760, (W * H) / 1700));
     P = Array.from({ length: n }, () => spawn(rnd, true));
     stars = Array.from({ length: Math.max(6, Math.round(W / 140)) }, () => ({ x: rnd() * W, y: rnd() * H * 0.55, r: 1.2 + rnd() * 2.4, ph: rnd() * 6.28 }));
     stars.push({ x: W * 0.66, y: H * 0.24, r: 3.6, ph: 0, big: true });
   }
   function spawn(rnd = Math.random, init) {
-    return { x: rnd() * W, y: rnd() * H * 0.72, tail: [], life: 80 + rnd() * 160, age: init ? rnd() * 200 : 0, c: Math.floor(rnd() * 6), w: 0.8 + rnd() * 1.8 };
+    return { x: rnd() * W, y: rnd() * H * 0.72, tail: [], life: 80 + rnd() * 160, age: init ? rnd() * 200 : 0, c: Math.floor(rnd() * 6), w: 0.9 + rnd() * 2.6 };
   }
   function field(x, y, t) {
     let vx = 0.55, vy = 0.18 * Math.sin(y * 0.012 + t * 0.4) + 0.12 * Math.cos(x * 0.008 - t * 0.3);
@@ -246,11 +248,30 @@
     for (const p of P) {
       const a = Math.min(1, p.age / 20) * Math.min(1, (p.life - p.age) / 30);
       if (a <= 0 || p.tail.length < 4) continue;
-      ctx.globalAlpha = a * (light ? 0.55 : 0.7);
+      // 厚涂：一笔底色 + 一笔偏移的高光，像油画颜料的棱
+      ctx.globalAlpha = a * (light ? 0.6 : 0.75);
       ctx.strokeStyle = col.strokes[p.c % col.strokes.length]; ctx.lineWidth = p.w;
       ctx.beginPath(); ctx.moveTo(p.tail[0], p.tail[1]);
       for (let k = 2; k < p.tail.length; k += 2) ctx.lineTo(p.tail[k], p.tail[k + 1]);
       ctx.lineTo(p.x, p.y); ctx.stroke();
+      if (p.w > 1.6) {
+        ctx.globalAlpha = a * (light ? 0.35 : 0.3);
+        ctx.strokeStyle = light ? "#fbf8f1" : "#dce8ff"; ctx.lineWidth = p.w * 0.35;
+        ctx.beginPath(); ctx.moveTo(p.tail[0] - 0.7, p.tail[1] - 0.7);
+        for (let k = 2; k < p.tail.length; k += 2) ctx.lineTo(p.tail[k] - 0.7, p.tail[k + 1] - 0.7);
+        ctx.stroke();
+      }
+    }
+    // 神经网络星座：相近的星连线，信号沿线流动
+    ctx.globalAlpha = 1; ctx.lineWidth = 0.8;
+    for (let i = 0; i < stars.length; i++) for (let j = i + 1; j < stars.length; j++) {
+      const s1 = stars[i], s2 = stars[j], d = Math.hypot(s1.x - s2.x, s1.y - s2.y);
+      if (d > 300) continue;
+      ctx.strokeStyle = col.gold; ctx.globalAlpha = (1 - d / 300) * (light ? 0.35 : 0.28);
+      ctx.beginPath(); ctx.moveTo(s1.x, s1.y); ctx.lineTo(s2.x, s2.y); ctx.stroke();
+      const f = ((t * 0.25 + (i * 7 + j * 3) * 0.13) % 1);
+      ctx.globalAlpha = (1 - d / 300) * 0.9; ctx.fillStyle = col.gold;
+      ctx.beginPath(); ctx.arc(s1.x + (s2.x - s1.x) * f, s1.y + (s2.y - s1.y) * f, 1.4, 0, 6.29); ctx.fill();
     }
     ctx.globalAlpha = 1;
     // 星辰与光环
@@ -273,9 +294,9 @@
     ctx.globalCompositeOperation = "destination-out"; ctx.beginPath(); ctx.arc(mx - mr * 0.45, my - mr * 0.25, mr * 0.88, 0, 6.29); ctx.fill();
     ctx.globalCompositeOperation = "source-over";
     // 粒子浪
-    const top = H * 0.6, cols = Math.round(W / 12), rows = 12;
+    const top = H * 0.5, cols = Math.round(W / 12), rows = 10;
     for (let r = 0; r < rows; r++) {
-      const depth = r / (rows - 1), baseY = top + depth * (H * 0.36);
+      const depth = r / (rows - 1), baseY = top + depth * (H * 0.3);
       for (let c = 0; c <= cols; c++) {
         const x = (c / cols) * W;
         let y = baseY + Math.sin(x * 0.006 + t * 0.9 + r * 0.55) * (16 + depth * 10) + Math.sin(x * 0.017 - t * 1.3 + r) * 6;

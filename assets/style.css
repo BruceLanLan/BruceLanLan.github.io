@@ -91,7 +91,7 @@ button { font: inherit; color: inherit; }
 @media (max-width: 700px) { .nav nav { display: none; } .lang { margin-left: auto; } }
 
 /* ---------- hero: 星空 + 浪 ---------- */
-.hero { position: relative; overflow: hidden; padding-bottom: 150px; }
+.hero { position: relative; overflow: hidden; padding-bottom: 230px; }
 #sky { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
 .hero-grid { display: grid; grid-template-columns: 1fr; gap: 40px; padding-top: 72px; align-items: center; }
 @media (min-width: 980px) { .hero-grid { grid-template-columns: 1.25fr 1fr; gap: 56px; padding-top: 104px; } }
@@ -118,16 +118,35 @@ html[lang="en"] .h1b { font-style: italic; }
 .roles { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 32px 0 0; }
 .roles li { font-size: 12.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; background: var(--surface); backdrop-filter: blur(6px); }
 
-.great-wave { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 190px; z-index: 1; pointer-events: none; }
-.w-back { fill: var(--wave-back); opacity: .55; }
-.w-mid { fill: var(--wave-mid); }
-.w-foam circle { fill: var(--foam); }
-.w-front { fill: var(--wave-front); }
+.great-wave { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 280px; z-index: 1; pointer-events: none; }
+.kasumi rect { fill: var(--kasumi); stroke: var(--ink-line); stroke-width: 1.5; opacity: .9; }
+.m-body { fill: url(#g-mtn); stroke: var(--ink-line); stroke-width: 2.5; stroke-linejoin: round; }
+.m-snow { fill: var(--snow); stroke: var(--ink-line); stroke-width: 2; stroke-linejoin: round; }
+.trace { fill: none; stroke: var(--trace); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.trace.w { stroke: var(--trace-w); stroke-width: 2.2; }
+.pad, .via { fill: var(--bg); stroke: var(--gold); stroke-width: 2; }
+.w-back { fill: url(#g-back); stroke: var(--ink-line); stroke-width: 2.5; }
+.w-mid { fill: url(#g-wave); stroke: var(--ink-line); stroke-width: 3; stroke-linejoin: round; }
+.w-foam circle { fill: var(--foam); stroke: var(--ink-line); stroke-width: .8; }
+.w-foam circle.via-foam { fill: none; stroke: var(--gold); stroke-width: 1.6; }
+.w-front { fill: var(--wave-front); stroke: var(--ink-line); stroke-width: 2.5; }
+.boat rect { fill: var(--chip); stroke: var(--ink-line); stroke-width: 2; }
+.boat path { stroke: var(--gold); stroke-width: 2; stroke-linecap: round; }
+.boat text { font: 700 9px var(--mono); fill: var(--gold); text-anchor: middle; letter-spacing: .08em; }
 @media (prefers-reduced-motion: no-preference) {
-  .w-back { animation: sway 9s ease-in-out infinite alternate; }
-  .w-mid, .w-foam { animation: sway 7s ease-in-out infinite alternate-reverse; }
+  .boat { animation: bob 5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .boat.small { animation-duration: 6.5s; animation-delay: -2s; }
+  .w-foam { animation: drift 6s ease-in-out infinite alternate; }
 }
-@keyframes sway { from { transform: translateX(-12px); } to { transform: translateX(12px); } }
+@keyframes bob { 0%, 100% { translate: 0 0; rotate: 0deg; } 50% { translate: 0 -5px; rotate: 4deg; } }
+@keyframes drift { from { transform: translateX(-3px); } to { transform: translateX(3px); } }
+
+/* 竖排题签（浮世绘版画的标题框） */
+.cartouche { display: none; position: absolute; z-index: 2; top: 92px; left: max(16px, calc(50% - 600px)); padding: 14px 7px 10px; writing-mode: vertical-rl;
+  background: var(--paper-label); border: 2px solid var(--ink-line); box-shadow: inset 0 0 0 3px var(--paper-label), inset 0 0 0 4px var(--seal);
+  font: 700 15px/1 var(--serif); letter-spacing: .32em; color: #1b2a50; }
+.ct-seal { margin-top: 10px; writing-mode: horizontal-tb; display: grid; place-items: center; width: 22px; height: 22px; background: var(--seal); color: #fff; font-size: 13px; letter-spacing: 0; border-radius: 3px; }
+@media (min-width: 1240px) { .cartouche { display: flex; align-items: center; } }
 
 /* ---------- NAND toy ---------- */
 .toy { position: relative; background: var(--surface); backdrop-filter: blur(10px); border: 1px solid var(--line); border-radius: 20px; padding: 22px; box-shadow: 0 30px 70px -40px rgba(0, 0, 0, .7); }
@@ -161,7 +180,7 @@ html[lang="en"] .h1b { font-style: italic; }
 .truth tr.cur td { color: var(--gold); background: var(--gold-soft); }
 
 /* ---------- stats ---------- */
-.stats-wrap { margin-top: -40px; z-index: 2; }
+.stats-wrap { margin-top: -30px; z-index: 2; }
 .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; margin: 0; background: var(--line); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: 0 30px 60px -45px rgba(0, 0, 0, .8); }
 @media (min-width: 760px) { .stats { grid-template-columns: repeat(5, 1fr); } }
 .stats div { background: var(--surface-solid); padding: 18px 20px; }
@@ -327,3 +346,39 @@ html:not([lang="en"]) .cell span { font-family: var(--display); }
   .chip { min-width: 76px; }
   .seal { width: 52px; height: 52px; } .seal span { font-size: 28px; }
 }
+
+/* =========================================================
+   浮世绘 × 电路：额外的色板
+   ========================================================= */
+:root {
+  --wave-hi: #4377d8; --wave-lo: #0f2660; --ink-line: #030817; --kasumi: #1d2d58;
+  --mountain: #142553; --mountain-hi: #2a4688; --snow: #e9f0ff; --trace: #f4c95d; --trace-w: rgba(233, 240, 255, .55);
+  --chip: #0b1533; --paper-label: #efe4c8; --grain-op: .09; --grain-blend: overlay;
+}
+:root[data-theme="light"] {
+  --wave-hi: #4f7fd0; --wave-lo: #163a80; --ink-line: #13234a; --kasumi: #eadcb8;
+  --mountain: #6f88b8; --mountain-hi: #a8bbdc; --snow: #fbf8f1; --trace: #a87a12; --trace-w: rgba(251, 248, 241, .7);
+  --chip: #13234a; --paper-label: #f6ecd2; --grain-op: .22; --grain-blend: multiply;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --wave-hi: #4f7fd0; --wave-lo: #163a80; --ink-line: #13234a; --kasumi: #eadcb8;
+    --mountain: #6f88b8; --mountain-hi: #a8bbdc; --snow: #fbf8f1; --trace: #a87a12; --trace-w: rgba(251, 248, 241, .7);
+    --chip: #13234a; --paper-label: #f6ecd2; --grain-op: .22; --grain-blend: multiply;
+  }
+}
+
+/* 画布颗粒：让整页有油画/版画纸的质感 */
+body::after { content: ""; position: fixed; inset: 0; z-index: 25; pointer-events: none; opacity: var(--grain-op); mix-blend-mode: var(--grain-blend);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1.4 -.25'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(0deg, rgba(128,128,128,.07) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(128,128,128,.05) 0 1px, transparent 1px 3px); }
+
+/* 卡片：版画的双线边框 */
+.card, .quote, .toy, .cell, .lab a, .read, .post { box-shadow: inset 0 0 0 4px var(--surface-solid), inset 0 0 0 5px color-mix(in srgb, var(--ink) 9%, transparent); }
+.toy { box-shadow: inset 0 0 0 5px var(--surface-solid), inset 0 0 0 6px color-mix(in srgb, var(--gold) 30%, transparent), 0 30px 70px -40px rgba(0, 0, 0, .7); }
+
+/* 标题下的毛笔笔触 */
+.sec-head h2 { position: relative; padding-bottom: 6px; }
+.sec-head h2::after { content: ""; position: absolute; left: -4px; right: -10px; bottom: -4px; height: 10px; opacity: .85;
+  background: var(--blue); -webkit-mask: var(--brush) no-repeat center / 100% 100%; mask: var(--brush) no-repeat center / 100% 100%; }
+:root { --brush: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 12' preserveAspectRatio='none'%3E%3Cpath d='M2 7 C40 3 90 5 140 6 S240 4 298 6 L296 9 C240 10 180 8 120 10 S40 11 4 10 Z' fill='black'/%3E%3Cpath d='M30 4 L90 3.5 M170 4.5 L260 4' stroke='black' stroke-width='.8' opacity='.6'/%3E%3C/svg%3E"); }

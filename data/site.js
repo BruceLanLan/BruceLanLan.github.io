@@ -8,6 +8,7 @@ window.SITE = {
     zh: {
       navAbout: "关于", navResearch: "研究", navTaps: "协议", navLab: "实验场", navLog: "动态", navAll: "仓库",
       kicker: "研究员 · 前 VC · 基金会发起人",
+      cartouche: "门电路浪里",
       h1a: "门电路是一种新语言。",
       h1b: "我用它写 AI、写协议，也写钱。",
       lede: "从真格、高榕、Bing Ventures 的投资桌，走到链上电路的第一线。这里是我的公开研究：大多数点开就能跑，每个数字都能追到出处，草案就标草案。",
@@ -37,6 +38,7 @@ window.SITE = {
     en: {
       navAbout: "About", navResearch: "Research", navTaps: "Protocols", navLab: "Lab", navLog: "Log", navAll: "Repos",
       kicker: "Researcher · ex-VC · Foundation initiator",
+      cartouche: "門電路浪裏",
       h1a: "Logic gates are a new language.",
       h1b: "I use them to write AI, protocols — and money.",
       lede: "From the investment desks of ZhenFund, Gaorong and Bing Ventures to the front line of on-chain circuits. This is my public research: most of it runs in your browser, every number traces back to a source, and drafts are labelled drafts.",
