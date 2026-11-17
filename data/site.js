@@ -75,15 +75,15 @@ window.SITE = {
   // 关于我：只用公开自述（X 推文与文章），引文为原文摘录
   about: {
     zh: [
-      "我是 BruceBlue，蓝。密码学硕士出身，2014 年开始创业；创业公司撑不下去之后，2019 年加入美元 VC。之后几年投了零食很忙、元气森林、得物、布鲁可等一批新消费公司，不少已经上市。我先后在 Bing Ventures、高榕资本、真格基金做过 GP。",
+      "我是 BruceBlue。密码学硕士出身，2014 年开始创业；创业公司撑不下去之后，2019 年加入美元 VC。之后几年投了零食很忙、元气森林、得物、布鲁可等一批新消费公司，不少已经上市。我先后在 Bing Ventures、高榕资本、真格基金做过 GP。",
       "2023 年，我投了当时 BRC-20 的头部工具 UniSat，是它的投资人和领投方。我在文章里这样介绍自己：“UniSat 早期投资者、BRC-20 早期见证者”。那段经历留给我的，不是“下次该买什么”的公式，而是一种识别方法：当底层原语刚被重新定义时，先去看它以后能拿来做什么。",
-      "现在我从投资桌前退了下来，把时间花在 AI 和 TapeOut 链上电路上：写 TAP 协议提案，做能在浏览器里跑的实验。我也是 TapeOut 社区基金会 @TapeOutCF 的发起人：基金会由社区发起，独立于协议官方，首轮公示了 36 位成员与候选人，并公开了 Proof of Build 贡献评估机制。",
+      "现在我从投资桌前退了下来，把时间花在 AI 和 TapeOut 链上电路上：写 TAP 协议提案，做能在浏览器里跑的实验。我也是 TapeOut 社区基金会 @TapeOutCF 的发起人：基金会由社区发起，独立于协议官方，并公开了 Proof of Build 贡献评估机制。",
       "我给自己的称呼是“金融道士”：用 VC 加玄学的眼光看投资，也看技术。",
     ],
     en: [
       "I'm BruceBlue. I trained in cryptography and started a company in 2014; when it couldn't go on, I joined a USD venture fund in 2019. Over the next few years I backed consumer companies such as 零食很忙 (Snack Busy), Genki Forest, Dewu and Blokees — several have since gone public. I've been a GP at Bing Ventures, Gaorong and ZhenFund.",
       "In 2023 I invested in UniSat, the leading BRC-20 tool at the time, as investor and lead. In my writing I introduce myself as \"an early UniSat investor and early witness of BRC-20\". What that left me with wasn't a formula for what to buy next, but a way of seeing: when the base primitives are being redefined, look first at what they could be used for.",
-      "Now I've stepped back from the investment desk to work on AI and TapeOut's on-chain circuits — writing TAP protocol proposals and building experiments that run in the browser. I'm also the initiator of the TapeOut Community Foundation (@TapeOutCF): community-led and independent of the protocol team, it published its first 36 members and candidates along with an open Proof of Build contribution review.",
+      "Now I've stepped back from the investment desk to work on AI and TapeOut's on-chain circuits — writing TAP protocol proposals and building experiments that run in the browser. I'm also the initiator of the TapeOut Community Foundation (@TapeOutCF): community-led and independent of the protocol team, it has published an open Proof of Build contribution review.",
       "I call myself a \"financial Taoist\": I look at investing — and technology — through a VC's eye and a mystic's.",
     ],
   },

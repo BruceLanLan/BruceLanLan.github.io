@@ -1,6 +1,6 @@
 // 由 scripts/sync.sh 生成，勿手改
 window.LIVE = {
-  synced: "2026-11-17",
+  synced: "2026-11-18",
   repos: [
   {
     "name": "tapeout-launch-lab",
