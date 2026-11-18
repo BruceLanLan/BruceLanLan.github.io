@@ -15,7 +15,7 @@ window.LIVE = {
     "name": "augur",
     "url": "https://github.com/BruceLanLan/augur",
     "description": "🦉 Augur — 本地优先的投资研究记忆系统：18 位投资大师独立分析 + 加权共识，证据带时间语义、每次运行可复查，CLI / Dashboard / MCP。A local-first research memory system with 18 investor personas.",
-    "stars": 693,
+    "stars": 694,
     "pushed": "2026-11-16",
     "homepage": "https://github.com/BruceLanLan/augur",
     "lang": "Python"

@@ -300,9 +300,9 @@
     ctx.globalCompositeOperation = "destination-out"; ctx.beginPath(); ctx.arc(mx - mr * 0.45, my - mr * 0.25, mr * 0.88, 0, 6.29); ctx.fill();
     ctx.globalCompositeOperation = "source-over";
     // 粒子浪
-    const top = H * 0.5, cols = Math.round(W / 12), rows = 10;
+    const top = Math.max(H * 0.5, H - 300), cols = Math.round(W / 12), rows = 10;
     for (let r = 0; r < rows; r++) {
-      const depth = r / (rows - 1), baseY = top + depth * (H * 0.3);
+      const depth = r / (rows - 1), baseY = top + depth * Math.min(H * 0.3, 240);
       for (let c = 0; c <= cols; c++) {
         const x = (c / cols) * W;
         let y = baseY + Math.sin(x * 0.006 + t * 0.9 + r * 0.55) * (16 + depth * 10) + Math.sin(x * 0.017 - t * 1.3 + r) * 6;
